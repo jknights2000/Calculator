@@ -8,21 +8,24 @@ namespace Calculator
         {
             bool exit = false;
             string answer = "";
-            Console.WriteLine("Welcome to Calculator!");
-            Console.WriteLine("----------------------");
+            
+            welcome();
             while (!exit)
             {
-                calc();
-                while(answer != "y" && answer != "n")
-                {
-                    Console.WriteLine("Want to exit y/n");
-                    answer = Console.ReadLine();
+                string mode = askFormode();
+                Console.WriteLine(mode);
+                switch (mode) {
+                    case "1": 
+                        calc();
+                        break;
+                    case "2":
+                        date();
+                        break;
+
                 }
-                if(answer == "y")
-                {
-                    exit = true;
-                }
-                answer = "";
+
+                exit = askForexit(exit,answer);
+        
             }
            
            
@@ -31,6 +34,68 @@ namespace Calculator
 
 
         }
+
+        private static void date()
+        {
+            DateTime inputDate = getDate();
+            Console.WriteLine("number of days to add");
+            int days = takeint();
+            DateTime output = inputDate.AddDays(days);
+            Console.WriteLine("{0} days from {1} is {2}",days,inputDate,output);
+        }
+
+        private static DateTime getDate()
+        {
+            bool isvaliddate = false;
+            DateTime date = new DateTime();
+            while (!isvaliddate)
+            {
+                Console.WriteLine("Enter Date");
+                string idate = Console.ReadLine();
+                isvaliddate = DateTime.TryParse(idate, out date);
+                if (!isvaliddate)
+                {
+                    Console.WriteLine("{0} is not a valid date", idate);
+                }
+            }
+            return date;
+        }
+
+        private static string askFormode()
+        {
+            string mode = " ";
+            while (mode != "1" && mode != "2")
+            {
+                Console.WriteLine("what mode you want");
+                Console.WriteLine("----------------------");
+                Console.WriteLine("1. Calc");
+                Console.WriteLine("2. Date");
+                mode = Console.ReadLine();
+            }
+            return mode;
+        }
+
+        private static void welcome()
+        {
+            Console.WriteLine("Welcome to Calculator!");
+            Console.WriteLine("----------------------");
+        }
+
+        private static bool askForexit(bool exit, string answer)
+        {
+            while (answer != "y" && answer != "n")
+            {
+                Console.WriteLine("Want to exit y/n");
+                answer = Console.ReadLine();
+            }
+            if (answer == "y")
+            {
+                exit = true;
+            }
+            answer = "";
+            return exit;
+        }
+
         public static int takeint ()
         {
             bool valid = false;
@@ -63,7 +128,7 @@ namespace Calculator
 
             Console.WriteLine("Input operator");
             string ainput = Console.ReadLine();
-            Console.WriteLine("how many times doy you want to " + ainput);
+            Console.WriteLine("how many times do you want to " + ainput);
             int ainput2 = takeint();
 
             int[] numbers = new int[ainput2];
