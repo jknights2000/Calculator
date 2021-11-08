@@ -9,6 +9,7 @@ namespace Calculator
             bool exit = false;
             string answer = "";
             Console.WriteLine("Welcome to Calculator!");
+            Console.WriteLine("----------------------");
             while (!exit)
             {
                 calc();
