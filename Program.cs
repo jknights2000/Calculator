@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 namespace Calculator
 {
     class Program
@@ -143,17 +145,33 @@ namespace Calculator
             */
 
             string ainput = AskForInput("Input operator");
-            Console.WriteLine("how many times do you want to " + ainput);
-            int ainput2 = takeint();
+            //Console.WriteLine("how many times do you want to " + ainput);
+            //int ainput2 = takeint();
 
-            int[] numbers = new int[ainput2];
+            //int[] numbers = new int[ainput2];
+            List<int> touse = new List<int>();
             int output2 = 0;
             string output3 = "";
-            for (int i = 0; i < ainput2; i++)
-            {
-                numbers[i] = takeint();
-            }
+            makeintList(touse);
 
+            switch (ainput) {
+                case "*":
+                    output2 = touse.Aggregate((result,item) => result * item);
+                    break;
+                case "-":
+                    output2 = touse.Aggregate((result, item) => result - item);
+                    break;
+                case "+":
+                    output2 = touse.Sum();
+                    break;
+                case "/":
+                    output2 = touse.Aggregate((result, item) => result / item);
+                    break;
+                default:
+                    Console.WriteLine("operator invalid");
+                    break;
+            }
+            /*
             foreach (int a in numbers)
             {
                 if (ainput == "*")
@@ -216,9 +234,45 @@ namespace Calculator
                     break;
                 }
             }
+            */
+            foreach(int i in touse)
+            {
+                if(output3 == "")
+                {
+                    output3 += i;
+                }
+                else
+                {
+                    output3 += " + " + i;
+                }
+            }
             string text = output3 + " = " + output2;
             Console.WriteLine(text);
             Log(path, text);
+        }
+        public static void makeintList(List<int> l)
+        {
+            bool notblank = true;
+            while (notblank)
+            {
+                string answer = AskForInput("Please enter a number: ");
+                if(answer == "")
+                {
+                    notblank = false;
+                }
+                else
+                {
+                    if (int.TryParse(answer, out int number))
+                    {
+                        l.Add(number);
+                    }
+                    else
+                    {
+                        Console.WriteLine("not a number");
+                    }
+                }
+            }
+
         }
         public static int takeint()
         {
