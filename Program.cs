@@ -6,6 +6,12 @@ namespace Calculator
 {
     class Program
     {
+        enum CalculatorMode
+        {
+            Number = 1,
+            Date = 2,
+            Exit = 3
+        }
         static void Main(string[] args)
         {
             string path = @"C:\Users\Joshua.knights\Work\Calc\Calculator\Log.txt";
@@ -18,16 +24,24 @@ namespace Calculator
             welcome();
             while (!exit)
             {
-                int mode = askFormode();
+                CalculatorMode mode = askFormode();
                 switch (mode)
                 {
-                    case 1:
-                        n.run(path);
+                    case CalculatorMode.Number:
+                        try
+                        {
+                            new NumberCalculator().run(path);
+                        }catch(Exception ex)
+                        {
+                            Console.WriteLine("Something went wrong");
+                            Console.WriteLine("error = " + ex.Message);
+                            exit = true;
+                        }
                         break;
-                    case 2:
-                        d.run(path);
+                    case CalculatorMode.Date:
+                        new DateCalculator().run(path);
                         break;
-                    case 3:
+                    case CalculatorMode.Exit:
                         exit = true;
                         break;
                 }
@@ -68,7 +82,7 @@ namespace Calculator
             }
         }
 
-        private static int askFormode()
+        private static CalculatorMode askFormode()
         {
 
             while (true)
@@ -79,13 +93,13 @@ namespace Calculator
                 Console.WriteLine("2. Date");
                 Console.WriteLine("3. Exit");
                 int mode = takeint();
-                if (mode != 1 && mode != 2 && mode != 3)
+                if (mode != (int)CalculatorMode.Number&& mode != (int)CalculatorMode.Date&&mode != (int)CalculatorMode.Exit)
                 {
                     Console.WriteLine("Not a mode");
                 }
                 else
                 {
-                    return mode;
+                    return (CalculatorMode)mode;
                 }
             }
         }
@@ -152,23 +166,27 @@ namespace Calculator
             List<int> touse = new List<int>();
             int output2 = 0;
             string output3 = "";
-            makeintList(touse);
+            
 
             switch (ainput) {
                 case "*":
+                    makeintList(touse);
                     output2 = touse.Aggregate((result,item) => result * item);
                     break;
                 case "-":
+                    makeintList(touse);
                     output2 = touse.Aggregate((result, item) => result - item);
                     break;
                 case "+":
+                    makeintList(touse);
                     output2 = touse.Sum();
                     break;
                 case "/":
+                    makeintList(touse);
                     output2 = touse.Aggregate((result, item) => result / item);
                     break;
                 default:
-                    Console.WriteLine("operator invalid");
+                    throw new Exception("Invalid operator");
                     break;
             }
             /*
