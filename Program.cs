@@ -243,7 +243,7 @@ namespace Calculator
                 }
                 else
                 {
-                    output3 += " + " + i;
+                    output3 += " "+ainput+" "+ i;
                 }
             }
             string text = output3 + " = " + output2;
