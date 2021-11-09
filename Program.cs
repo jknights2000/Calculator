@@ -6,25 +6,30 @@ namespace Calculator
     {
         static void Main(string[] args)
         {
+            NumberCalculator n = new NumberCalculator();
+            DateCalculator d = new DateCalculator();
             bool exit = false;
             string answer = "";
             
             welcome();
             while (!exit)
             {
-                string mode = askFormode();
-                Console.WriteLine(mode);
+                int mode = askFormode();
                 switch (mode) {
-                    case "1": 
-                        calc();
+                    case 1:
+                        n.run();
                         break;
-                    case "2":
-                        date();
+                    case 2:
+                        d.run();
                         break;
-
+                    case 3:
+                        exit = true;
+                        break;
                 }
-
-                exit = askForexit(exit,answer);
+                if (!exit)
+                {
+                    exit = askForexit(exit, answer);
+                }
         
             }
            
@@ -35,44 +40,28 @@ namespace Calculator
 
         }
 
-        private static void date()
-        {
-            DateTime inputDate = getDate();
-            Console.WriteLine("number of days to add");
-            int days = takeint();
-            DateTime output = inputDate.AddDays(days);
-            Console.WriteLine("{0} days from {1} is {2}",days,inputDate,output);
-        }
+        
 
-        private static DateTime getDate()
+        private static int askFormode()
         {
-            bool isvaliddate = false;
-            DateTime date = new DateTime();
-            while (!isvaliddate)
-            {
-                Console.WriteLine("Enter Date");
-                string idate = Console.ReadLine();
-                isvaliddate = DateTime.TryParse(idate, out date);
-                if (!isvaliddate)
-                {
-                    Console.WriteLine("{0} is not a valid date", idate);
-                }
-            }
-            return date;
-        }
-
-        private static string askFormode()
-        {
-            string mode = " ";
-            while (mode != "1" && mode != "2")
+            
+            while (true)
             {
                 Console.WriteLine("what mode you want");
                 Console.WriteLine("----------------------");
                 Console.WriteLine("1. Calc");
                 Console.WriteLine("2. Date");
-                mode = Console.ReadLine();
+                Console.WriteLine("3. Exit");
+                int mode = takeint();
+                if(mode != 1 && mode != 2 && mode != 3)
+                {
+                    Console.WriteLine("Not a mode");
+                }
+                else
+                {
+                    return mode;
+                }
             }
-            return mode;
         }
 
         private static void welcome()
@@ -80,43 +69,46 @@ namespace Calculator
             Console.WriteLine("Welcome to Calculator!");
             Console.WriteLine("----------------------");
         }
-
-        private static bool askForexit(bool exit, string answer)
+        public static string AskForInput(string output)
         {
-            while (answer != "y" && answer != "n")
-            {
-                Console.WriteLine("Want to exit y/n");
-                answer = Console.ReadLine();
-            }
-            if (answer == "y")
-            {
-                exit = true;
-            }
-            answer = "";
-            return exit;
+            Console.WriteLine(output);
+
+            return Console.ReadLine();
+
         }
-
-        public static int takeint ()
+        public static int takeint()
         {
-            bool valid = false;
-            int number = 0;
-            while (!valid)
+
+            while (true)
             {
-                Console.WriteLine("Please enter a number: ");
-                string answer = Console.ReadLine();
-                if (int.TryParse(answer, out number))
+                string answer = AskForInput("Please enter a number: ");
+                if (int.TryParse(answer, out int number))
                 {
-                    number = int.Parse(answer);
-                    valid = true;
+                    return number;
                 }
                 else
                 {
                     Console.WriteLine("not a number");
                 }
             }
-            return number;
+
         }
-        public static void calc()
+        private static bool askForexit(bool exit, string answer)
+        {
+            while (answer != "y" && answer != "n")
+            {
+                answer = AskForInput("Want to exit y/n").ToLower();
+            }
+            return (answer == "y");
+           
+        }
+
+      
+        
+    }
+    class NumberCalculator
+    {
+        public  void run()
         {
             /*
             Console.WriteLine("Input radius of circle");
@@ -126,8 +118,7 @@ namespace Calculator
             Console.WriteLine("The area of a circle with a radius of " + radius + " is " + area);
             */
 
-            Console.WriteLine("Input operator");
-            string ainput = Console.ReadLine();
+            string ainput = AskForInput("Input operator");
             Console.WriteLine("how many times do you want to " + ainput);
             int ainput2 = takeint();
 
@@ -136,8 +127,6 @@ namespace Calculator
             string output3 = "";
             for (int i = 0; i < ainput2; i++)
             {
-
-
                 numbers[i] = takeint();
             }
 
@@ -204,6 +193,81 @@ namespace Calculator
                 }
             }
             Console.WriteLine(output3 + " = " + output2);
+        }
+        public static int takeint()
+        {
+
+            while (true)
+            {
+                string answer = AskForInput("Please enter a number: ");
+                if (int.TryParse(answer, out int number))
+                {
+                    return number;
+                }
+                else
+                {
+                    Console.WriteLine("not a number");
+                }
+            }
+
+        }
+        public static string AskForInput(string output)
+        {
+            Console.WriteLine(output);
+
+            return Console.ReadLine();
+
+        }
+    }
+    class DateCalculator
+    {
+        public void run()
+        {
+            DateTime inputDate = getDate();
+            Console.WriteLine("number of days to add");
+            int days = takeint();
+            DateTime output = inputDate.AddDays(days);
+            Console.WriteLine("{0} days from {1} is {2}", days, inputDate, output);
+        }
+
+        private static DateTime getDate()
+        {
+            while (true)
+            {
+
+                string idate = AskForInput("Enter Date");
+
+                if (DateTime.TryParse(idate, out DateTime date))
+                {
+                    return date;
+                }
+                Console.WriteLine("{0} is not a valid date", idate);
+            }
+
+        }
+        public static int takeint()
+        {
+
+            while (true)
+            {
+                string answer = AskForInput("Please enter a number: ");
+                if (int.TryParse(answer, out int number))
+                {
+                    return number;
+                }
+                else
+                {
+                    Console.WriteLine("not a number");
+                }
+            }
+
+        }
+        public static string AskForInput(string output)
+        {
+            Console.WriteLine(output);
+
+            return Console.ReadLine();
+
         }
     }
 }
