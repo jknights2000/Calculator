@@ -1,26 +1,29 @@
 ﻿using System;
-
+using System.IO;
 namespace Calculator
 {
     class Program
     {
         static void Main(string[] args)
         {
+            string path = @"C:\Users\Joshua.knights\Work\Calc\Calculator\Log.txt";
             NumberCalculator n = new NumberCalculator();
             DateCalculator d = new DateCalculator();
+            checkfile(path);
             bool exit = false;
             string answer = "";
-            
+
             welcome();
             while (!exit)
             {
                 int mode = askFormode();
-                switch (mode) {
+                switch (mode)
+                {
                     case 1:
-                        n.run();
+                        n.run(path);
                         break;
                     case 2:
-                        d.run();
+                        d.run(path);
                         break;
                     case 3:
                         exit = true;
@@ -30,21 +33,42 @@ namespace Calculator
                 {
                     exit = askForexit(exit, answer);
                 }
-        
+
             }
-           
-           
+
+
 
 
 
 
         }
 
-        
+        private static void checkfile(string path)
+        {
+
+            // This text is added only once to the file.
+            if (!File.Exists(path))
+            {
+                // Create a file to write to.
+                using (StreamWriter sw = File.CreateText(path))
+                {
+                    sw.WriteLine("Log Start");
+
+                }
+            }
+            else
+            {
+                File.WriteAllText(path, String.Empty);
+                using (StreamWriter sw = File.CreateText(path))
+                {
+                    sw.WriteLine("Log Start");
+                }
+            }
+        }
 
         private static int askFormode()
         {
-            
+
             while (true)
             {
                 Console.WriteLine("what mode you want");
@@ -53,7 +77,7 @@ namespace Calculator
                 Console.WriteLine("2. Date");
                 Console.WriteLine("3. Exit");
                 int mode = takeint();
-                if(mode != 1 && mode != 2 && mode != 3)
+                if (mode != 1 && mode != 2 && mode != 3)
                 {
                     Console.WriteLine("Not a mode");
                 }
@@ -100,15 +124,15 @@ namespace Calculator
                 answer = AskForInput("Want to exit y/n").ToLower();
             }
             return (answer == "y");
-           
+
         }
 
-      
-        
+
+
     }
     class NumberCalculator
     {
-        public  void run()
+        public void run(string path)
         {
             /*
             Console.WriteLine("Input radius of circle");
@@ -192,7 +216,9 @@ namespace Calculator
                     break;
                 }
             }
-            Console.WriteLine(output3 + " = " + output2);
+            string text = output3 + " = " + output2;
+            Console.WriteLine(text);
+            Log(path, text);
         }
         public static int takeint()
         {
@@ -218,16 +244,25 @@ namespace Calculator
             return Console.ReadLine();
 
         }
+        public void Log(string path, string text)
+        {
+            using (StreamWriter sw = File.AppendText(path))
+            {
+                sw.WriteLine(text);
+            }
+        }
     }
     class DateCalculator
     {
-        public void run()
+        public void run(string path)
         {
             DateTime inputDate = getDate();
             Console.WriteLine("number of days to add");
             int days = takeint();
             DateTime output = inputDate.AddDays(days);
-            Console.WriteLine("{0} days from {1} is {2}", days, inputDate, output);
+            string text = days + " days from " + inputDate + " is " + output;
+            Console.WriteLine(text);
+            Log(path, text);
         }
 
         private static DateTime getDate()
@@ -268,6 +303,13 @@ namespace Calculator
 
             return Console.ReadLine();
 
+        }
+        public void Log(string path, string text)
+        {
+            using (StreamWriter sw = File.AppendText(path))
+            {
+                sw.WriteLine(text);
+            }
         }
     }
 }
